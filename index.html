@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Information Gathering</h2>
+    <script>
+        function findMyPlace() {
+
+            const success = (position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+
+                const geoApiUri = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${long}&localityLanguage=en`
+
+                fetch(geoApiUri)
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log("Continent: " + data.continent)
+                        console.log("Country: " + data.countryName)
+                        console.log("State: " + data.principalSubdivision)
+                        console.log("City: " + data.city)
+                        console.log("Latitude: " + data.latitude)
+                        console.log("Longitude: " + data.longitude)
+                        console.log("Platform: " + navigator.platform);
+                        console.log("Browser: " + getUsersBrowser())
+                        console.log("Device Type: "+ getDeviceType())
+                    })
+            }
+
+            const error = () => {
+                console.log("unable to retrieve information")
+            }
+
+            navigator.geolocation.getCurrentPosition(success, error)
+        }
+
+        findMyPlace();
+
+        function getUsersBrowser() {
+
+            var userBrowser = ''
+
+            if ((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1) {
+                userBrowser = 'Opera'
+            }
+            else if (navigator.userAgent.indexOf("Edg") != -1) {
+                userBrowser = 'Edg'
+            }
+            else if (navigator.userAgent.indexOf("Chrome") != -1) {
+                userBrowser = 'Chrome'
+            }
+            else if (navigator.userAgent.indexOf("Safari") != -1) {
+                userBrowser = 'Safari'
+            }
+            else if (navigator.userAgent.indexOf("Firefox") != -1) {
+                userBrowser = 'Firefox'
+            }
+            else if ((navigator.userAgent.indexOf("MSIE") != -1) || (!!document.documentMode == true)) //IF IE > 10
+            {
+                userBrowser = 'IE'
+            }
+            else {
+                userBrowser = 'Unknown'
+            }
+
+            return userBrowser;
+        }
+
+        const getDeviceType = () => {
+            const ua = navigator.userAgent;
+            if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+                return "tablet";
+            }
+            if (
+                /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+                    ua
+                )
+            ) {
+                return "mobile";
+            }
+            return "desktop";
+        };
+
+    </script>
+</body>
+
+</html>
